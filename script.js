@@ -91,10 +91,12 @@ function showEuropePMCResults(englishQuery, originalQuery) {
       }
 
       addMessage("📘 Europe PMC 搜尋結果：");
-      results.forEach((item, i) => {
+      results.forEach((item) => {
         const title = item.title;
         const link = `https://europepmc.org/article/${item.source}/${item.id}`;
-        addMessage(`🔸 <a href="${link}" target="_blank">${title}</a>`);
+        translateToChinese(title).then(translatedTitle => {
+          addMessage(`🔸 <a href="${link}" target="_blank">${title}</a><br>📘 中文：${translatedTitle}`);
+        });
       });
     })
     .catch(error => {
