@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Jimmy AI 學術搜尋助理</title>
+  <title>Jimmy 的 AI 代理人</title>
   <style>
     body {
       background-color: #2e2e2e;
@@ -12,37 +12,64 @@
       margin: 0;
       padding: 0;
     }
+
+    #business-card {
+      background-color: #1f1f1f;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #444;
+    }
+
+    #business-card h1 {
+      margin: 0;
+      font-size: 28px;
+      color: #4eaaff;
+    }
+
+    #business-card p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #ccc;
+    }
+
     #chat-container {
       padding: 20px;
-      max-width: 800px;
+      max-width: 700px;
       margin: 0 auto;
-      height: 90vh;
+      height: 70vh;
       overflow-y: auto;
       background-color: #3a3a3a;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
     }
+
     .message {
       margin: 10px 0;
       padding: 10px;
       background-color: #444;
       border-radius: 5px;
     }
+
     #input-area {
       display: flex;
+      justify-content: center;
       padding: 20px;
       background-color: #2e2e2e;
     }
+
     #user-input {
-      flex-grow: 1;
-      padding: 10px;
+      width: 60%;
+      padding: 8px;
       font-size: 16px;
       border: none;
       border-radius: 5px;
       margin-right: 10px;
+      background-color: #555;
+      color: #fff;
     }
+
     #send-button {
-      padding: 10px 20px;
+      padding: 8px 20px;
       font-size: 16px;
       background-color: #007bff;
       color: white;
@@ -50,19 +77,48 @@
       border-radius: 5px;
       cursor: pointer;
     }
+
     a {
       color: #4eaaff;
+    }
+
+    @media screen and (max-width: 600px) {
+      #user-input {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      #input-area {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      #send-button {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
+
+  <!-- 個人名片區塊 -->
+  <div id="business-card">
+    <h1>Jimmy 的 AI 代理人</h1>
+    <p>專精：碳權、生技、永續、行銷、自動化工具</p>
+    <p>Email: jimmy@example.com | GitHub: @jimmydev</p>
+  </div>
+
+  <!-- 對話區 -->
   <div id="chat-container">
     <div class="message">🤖 Jimmy AI：請輸入欲搜尋的學術主題。</div>
   </div>
+
+  <!-- 輸入區 -->
   <div id="input-area">
     <input type="text" id="user-input" placeholder="輸入學術主題...">
     <button id="send-button">送出</button>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
