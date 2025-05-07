@@ -19,9 +19,12 @@ function handleUserInput() {
   userInput.value = "";
   addMessage(`🤖 Jimmy AI: 搜尋「${input}」的相關學術資料中...`);
 
+  // 用於翻譯的 API 函式
   translateToEnglish(input)
     .then(translated => {
+      // 使用翻譯結果進行 PubMed 搜尋
       searchPubMed(translated, input);
+      // 顯示 Google Scholar 的結果
       showGoogleScholarResults(translated, input);
     })
     .catch(error => {
@@ -30,6 +33,7 @@ function handleUserInput() {
     });
 }
 
+// 顯示訊息的函式
 function addMessage(message, useHTML = false) {
   const messageElement = document.createElement("div");
   messageElement.className = "message";
@@ -39,9 +43,10 @@ function addMessage(message, useHTML = false) {
     messageElement.textContent = message;
   }
   chatContainer.appendChild(messageElement);
-  chatContainer.scrollTop = chatContainer.scrollHeight;
+  chatContainer.scrollTop = chatContainer.scrollHeight; // 保持滾動條位置
 }
 
+// 翻譯文字的函式
 function translateToEnglish(text) {
   const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-TW&tl=en&dt=t&q=${encodeURIComponent(text)}`;
   return fetch(url)
@@ -49,6 +54,7 @@ function translateToEnglish(text) {
     .then(data => data[0][0][0]);
 }
 
+// 搜尋 PubMed 的函式
 function searchPubMed(englishQuery, originalQuery) {
   const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(englishQuery)}&retmode=json&retmax=3`;
 
@@ -84,11 +90,12 @@ function searchPubMed(englishQuery, originalQuery) {
     });
 }
 
+// 顯示 Google Scholar 結果的函式
 function showGoogleScholarResults(englishQuery, originalQuery) {
   const googleUrl = `https://scholar.google.com/scholar?q=${encodeURIComponent(englishQuery)}&hl=zh-TW&as_sdt=0,5`;
   addMessage(`🔗 <a href="${googleUrl}" target="_blank">點此瀏覽 Google 學術搜尋結果</a>`, true);
   
-  // 範例模擬卡片
+  // 模擬顯示卡片
   for (let i = 1; i <= 3; i++) {
     const cardHTML = `
       <div class="result-card">
@@ -106,4 +113,10 @@ window.addEventListener("scroll", () => {
   if (window.scrollY > 300) {
     backToTop.style.display = "block";
   } else {
-    backToTop
+    backToTop.style.display = "none";
+  }
+});
+
+backToTop.addEventListener("click", () => {
+  window.scrollTo(0, 0);
+});
