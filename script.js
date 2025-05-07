@@ -22,7 +22,7 @@ function handleUserInput() {
   translateToEnglish(input)
     .then(translated => {
       searchPubMed(translated, input);
-      showGoogleScholarResults(translated, input);
+      showEuropePMCResults(translated, input);
     })
     .catch(error => {
       addMessage("❌ 翻譯失敗，請重試。");
@@ -40,13 +40,6 @@ function addMessage(message) {
 
 function translateToEnglish(text) {
   const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-TW&tl=en&dt=t&q=${encodeURIComponent(text)}`;
-  return fetch(url)
-    .then(response => response.json())
-    .then(data => data[0][0][0]);
-}
-
-function translateToChinese(text) {
-  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=zh-TW&dt=t&q=${encodeURIComponent(text)}`;
   return fetch(url)
     .then(response => response.json())
     .then(data => data[0][0][0]);
@@ -72,8 +65,9 @@ function searchPubMed(englishQuery, originalQuery) {
           addMessage("📚 PubMed 搜尋結果：");
           ids.forEach(id => {
             const item = summary.result[id];
-            translateToChinese(item.title).then(chineseTitle => {
-              addMessage(`🔸 <a href="https://pubmed.ncbi.nlm.nih.gov/${id}/" target="_blank">${item.title}</a> - ${chineseTitle}`);
+            const title = item.title;
+            translateToChinese(title).then(translatedTitle => {
+              addMessage(`🔸 <a href="https://pubmed.ncbi.nlm.nih.gov/${id}/" target="_blank">${title}</a><br>📘 中文：${translatedTitle}`);
             });
           });
         });
@@ -84,20 +78,34 @@ function searchPubMed(englishQuery, originalQuery) {
     });
 }
 
-function showGoogleScholarResults(englishQuery, originalQuery) {
-  const googleUrl = `https://scholar.google.com/scholar?q=${encodeURIComponent(englishQuery)}&hl=zh-TW&as_sdt=0,5`;
-  addMessage(`🔗 點此瀏覽 Google 學術搜尋結果：<a href="${googleUrl}" target="_blank">${googleUrl}</a>`);
-  addMessage("📘 Google 學術搜尋模擬結果：");
+function showEuropePMCResults(englishQuery, originalQuery) {
+  const url = `https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=${encodeURIComponent(englishQuery)}&format=json&pageSize=3`;
 
-  const fakeTitles = [
-    `Current treatment strategies and long-term outcomes in ${englishQuery}`,
-    `Immunological aspects and inflammatory markers in patients with ${englishQuery}`,
-    `A meta-analysis of biologics efficacy for ${englishQuery} therapy`
-  ];
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      const results = data.resultList.result;
+      if (!results || results.length === 0) {
+        addMessage("🔍 找不到相關的 Europe PMC 文獻。");
+        return;
+      }
 
-  fakeTitles.forEach(title => {
-    translateToChinese(title).then(chineseTitle => {
-      addMessage(`🔸 ${title} - ${chineseTitle}`);
+      addMessage("📘 Europe PMC 搜尋結果：");
+      results.forEach((item, i) => {
+        const title = item.title;
+        const link = `https://europepmc.org/article/${item.source}/${item.id}`;
+        addMessage(`🔸 <a href="${link}" target="_blank">${title}</a>`);
+      });
+    })
+    .catch(error => {
+      console.error("Europe PMC Error:", error);
+      addMessage("❌ 取得 Europe PMC 資料時發生錯誤。");
     });
-  });
+}
+
+function translateToChinese(text) {
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=zh-TW&dt=t&q=${encodeURIComponent(text)}`;
+  return fetch(url)
+    .then(response => response.json())
+    .then(data => data[0][0][0]);
 }
