@@ -1,52 +1,121 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-    font-family: "Arial", sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .container {
-    max-width: 600px;
-    margin: 40px auto;
-    background-color: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  h1 {
-    text-align: center;
-  }
-  
-  .chat-box {
-    height: 300px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
-    background-color: #fafafa;
-  }
-  
-  .chat-box div {
-    margin: 5px 0;
-  }
-  
-  #chat-form {
-    display: flex;
-  }
-  
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+#app {
+  width: 90%;
+  max-width: 600px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  background-color: #222;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+#chat-container {
+  padding: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  background-color: #000;
+  color: white;
+  border-bottom: 1px solid #444;
+  border-top: 1px solid #444;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+.message {
+  margin-bottom: 10px;
+}
+
+.input-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #222;
+}
+
+#user-input {
+  width: 80%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background-color: #fff;
+  color: #333;
+}
+
+#send-button {
+  width: 15%;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#send-button:hover {
+  background-color: #45a049;
+}
+
+#back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: none;
+}
+
+#back-to-top:hover {
+  background-color: #555;
+}
+
+.result-card {
+  background-color: #333;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.result-card a {
+  color: #4CAF50;
+  text-decoration: none;
+}
+
+.result-card a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
   #user-input {
-    flex: 1;
-    padding: 10px;
-    font-size: 16px;
+    width: 70%;
   }
-  
-  button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #0077cc;
-    color: white;
-    border: none;
-    cursor: pointer;
+  #send-button {
+    width: 25%;
   }
-  
+}
