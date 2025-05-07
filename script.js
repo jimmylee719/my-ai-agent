@@ -1,63 +1,87 @@
-function addMessage(message) {
-  const chatBox = document.getElementById('chat-box');
-  const messageElement = document.createElement('div');
-  messageElement.classList.add('message');
-  messageElement.textContent = message;
-  chatBox.appendChild(messageElement);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
+// script.js
 
-// PubMed 搜尋
-async function searchPubMed(query) {
-  const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(query)}&retmode=xml&retmax=5`;
+const chatContainer = document.getElementById("chat-container");
+const userInput = document.getElementById("user-input");
+const sendButton = document.getElementById("send-button");
 
-  try {
-    const response = await fetch(url);
-    const data = await response.text();
-    const ids = data.match(/<Id>(\d+)<\/Id>/g)?.map(id => id.replace(/<\/?Id>/g, ''));
-
-    if (ids?.length > 0) {
-      const detailsUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${ids.join(',')}&retmode=xml`;
-      const detailsResponse = await fetch(detailsUrl);
-      const detailsData = await detailsResponse.text();
-      parsePubMedDetails(detailsData);
-    } else {
-      addMessage("🔍 找不到相關的 PubMed 文獻。");
-    }
-  } catch (error) {
-    console.error(error);
-    addMessage("❌ 發生錯誤，無法取得 PubMed 資料。");
+sendButton.addEventListener("click", handleUserInput);
+userInput.addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    handleUserInput();
   }
-}
-
-function parsePubMedDetails(xmlData) {
-  const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(xmlData, "application/xml");
-  const articles = xmlDoc.getElementsByTagName("PubmedArticle");
-
-  Array.from(articles).forEach(article => {
-    const title = article.querySelector("ArticleTitle")?.textContent || "無標題";
-    const abstract = article.querySelector("AbstractText")?.textContent || "無摘要";
-    addMessage(`📘 標題：${title}`);
-    addMessage(`📄 摘要：${abstract}`);
-  });
-}
-
-// Google 學術（僅顯示提示，無法直接爬取）
-async function searchGoogleScholar(query) {
-  const url = `https://scholar.google.com/scholar?q=${encodeURIComponent(query)}&hl=zh-TW&as_sdt=0,5`;
-  addMessage(`🔗 點此瀏覽 Google 學術搜尋結果：${url}`);
-}
-
-document.getElementById('chat-form').addEventListener('submit', async function (e) {
-  e.preventDefault();
-  const query = document.getElementById('user-input').value;
-  if (query.trim()) {
-    addMessage(`🤖 Jimmy AI: 搜尋「${query}」的相關學術資料中...`);
-    searchPubMed(query);
-    searchGoogleScholar(query);
-  } else {
-    addMessage("❌ 請輸入搜尋關鍵字。");
-  }
-  document.getElementById('user-input').value = '';
 });
+
+function handleUserInput() {
+  const input = userInput.value.trim();
+  if (input === "") return;
+
+  addMessage(`🧑 你：${input}`);
+  userInput.value = "";
+  addMessage(`🤖 Jimmy AI: 搜尋「${input}」的相關學術資料中...`);
+
+  translateToEnglish(input)
+    .then(translated => {
+      searchPubMed(translated, input);
+      showGoogleScholarResults(translated, input);
+    })
+    .catch(error => {
+      addMessage("❌ 翻譯失敗，請重試。");
+      console.error(error);
+    });
+}
+
+function addMessage(message) {
+  const messageElement = document.createElement("div");
+  messageElement.className = "message";
+  messageElement.innerHTML = message;
+  chatContainer.appendChild(messageElement);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function translateToEnglish(text) {
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-TW&tl=en&dt=t&q=${encodeURIComponent(text)}`;
+  return fetch(url)
+    .then(response => response.json())
+    .then(data => data[0][0][0]);
+}
+
+function searchPubMed(englishQuery, originalQuery) {
+  const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(englishQuery)}&retmode=json&retmax=3`;
+
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      const ids = data.esearchresult.idlist;
+      if (ids.length === 0) {
+        addMessage("🔍 找不到相關的 PubMed 文獻。");
+        return;
+      }
+
+      const summaryUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${ids.join(",")}&retmode=json`;
+
+      fetch(summaryUrl)
+        .then(res => res.json())
+        .then(summary => {
+          addMessage("📚 PubMed 搜尋結果：");
+          ids.forEach(id => {
+            const item = summary.result[id];
+            addMessage(`🔸 <a href="https://pubmed.ncbi.nlm.nih.gov/${id}/" target="_blank">${item.title}</a>`);
+          });
+        });
+    })
+    .catch(error => {
+      console.error("PubMed Error:", error);
+      addMessage("❌ 取得 PubMed 資料時發生錯誤。");
+    });
+}
+
+function showGoogleScholarResults(englishQuery, originalQuery) {
+  const googleUrl = `https://scholar.google.com/scholar?q=${encodeURIComponent(englishQuery)}&hl=zh-TW&as_sdt=0,5`;
+  addMessage(`🔗 點此瀏覽 Google 學術搜尋結果：<a href="${googleUrl}" target="_blank">${googleUrl}</a>`);
+
+  // 顯示範例說明用的前三筆模擬結果
+  addMessage("📘 Google 學術搜尋模擬結果（實際點擊上方連結查看）：");
+  for (let i = 1; i <= 3; i++) {
+    addMessage(`📄 範例文獻 ${i}：<em>「${originalQuery}」相關主題的研究文章</em>`);
+  }
+}
