@@ -19,12 +19,9 @@ function handleUserInput() {
   userInput.value = "";
   addMessage(`🤖 Jimmy AI: 搜尋「${input}」的相關學術資料中...`);
 
-  // 用於翻譯的 API 函式
   translateToEnglish(input)
     .then(translated => {
-      // 使用翻譯結果進行 PubMed 搜尋
       searchPubMed(translated, input);
-      // 顯示 Google Scholar 的結果
       showGoogleScholarResults(translated, input);
     })
     .catch(error => {
@@ -33,20 +30,14 @@ function handleUserInput() {
     });
 }
 
-// 顯示訊息的函式
-function addMessage(message, useHTML = false) {
+function addMessage(message) {
   const messageElement = document.createElement("div");
   messageElement.className = "message";
-  if (useHTML) {
-    messageElement.innerHTML = message;
-  } else {
-    messageElement.textContent = message;
-  }
+  messageElement.innerHTML = message;
   chatContainer.appendChild(messageElement);
-  chatContainer.scrollTop = chatContainer.scrollHeight; // 保持滾動條位置
+  chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
-// 翻譯文字的函式
 function translateToEnglish(text) {
   const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-TW&tl=en&dt=t&q=${encodeURIComponent(text)}`;
   return fetch(url)
@@ -54,7 +45,13 @@ function translateToEnglish(text) {
     .then(data => data[0][0][0]);
 }
 
-// 搜尋 PubMed 的函式
+function translateToChinese(text) {
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=zh-TW&dt=t&q=${encodeURIComponent(text)}`;
+  return fetch(url)
+    .then(response => response.json())
+    .then(data => data[0][0][0]);
+}
+
 function searchPubMed(englishQuery, originalQuery) {
   const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(englishQuery)}&retmode=json&retmax=3`;
 
@@ -75,12 +72,10 @@ function searchPubMed(englishQuery, originalQuery) {
           addMessage("📚 PubMed 搜尋結果：");
           ids.forEach(id => {
             const item = summary.result[id];
-            const cardHTML = `
-              <div class="result-card">
-                <a href="https://pubmed.ncbi.nlm.nih.gov/${id}/" target="_blank">${item.title}</a>
-              </div>
-            `;
-            addMessage(cardHTML, true);
+            // 加入翻譯功能：顯示中英文標題
+            translateToChinese(item.title).then(chineseTitle => {
+              addMessage(`🔸 <a href="https://pubmed.ncbi.nlm.nih.gov/${id}/" target="_blank">${item.title}</a> - ${chineseTitle}`);
+            });
           });
         });
     })
@@ -90,33 +85,13 @@ function searchPubMed(englishQuery, originalQuery) {
     });
 }
 
-// 顯示 Google Scholar 結果的函式
 function showGoogleScholarResults(englishQuery, originalQuery) {
   const googleUrl = `https://scholar.google.com/scholar?q=${encodeURIComponent(englishQuery)}&hl=zh-TW&as_sdt=0,5`;
-  addMessage(`🔗 <a href="${googleUrl}" target="_blank">點此瀏覽 Google 學術搜尋結果</a>`, true);
-  
-  // 模擬顯示卡片
+  addMessage(`🔗 點此瀏覽 Google 學術搜尋結果：<a href="${googleUrl}" target="_blank">${googleUrl}</a>`);
+
+  // 顯示範例說明用的前三筆模擬結果
+  addMessage("📘 Google 學術搜尋模擬結果（實際點擊上方連結查看）：");
   for (let i = 1; i <= 3; i++) {
-    const cardHTML = `
-      <div class="result-card">
-        <a href="${googleUrl}" target="_blank">📄 範例文獻 ${i}：關於「${originalQuery}」的研究</a>
-      </div>
-    `;
-    addMessage(cardHTML, true);
+    addMessage(`📄 範例文獻 ${i}：<em>「${originalQuery}」相關主題的研究文章</em>`);
   }
 }
-
-// 回到頂部按鈕功能
-const backToTop = document.getElementById("back-to-top");
-
-window.addEventListener("scroll", () => {
-  if (window.scrollY > 300) {
-    backToTop.style.display = "block";
-  } else {
-    backToTop.style.display = "none";
-  }
-});
-
-backToTop.addEventListener("click", () => {
-  window.scrollTo(0, 0);
-});
