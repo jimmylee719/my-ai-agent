@@ -32,6 +32,11 @@ header {
   text-align: center;
 }
 
+header h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
 #chat-container {
   padding: 10px;
   max-height: 400px;
@@ -42,7 +47,7 @@ header {
   border-top: 1px solid #444;
   margin: 10px;
   border-radius: 10px;
-  height: 300px; /* 電腦上調整對話框的大小 */
+  height: 300px;
 }
 
 .message {
@@ -51,13 +56,13 @@ header {
 
 .input-container {
   display: flex;
-  justify-content: flex-end; /* 設置為右對齊 */
+  justify-content: flex-end;
   padding: 10px;
   background-color: #222;
 }
 
 #user-input {
-  width: 75%; /* 縮小一點 */
+  width: 75%;
   padding: 10px;
   border-radius: 5px;
   border: 1px solid #444;
@@ -66,14 +71,14 @@ header {
 }
 
 #send-button {
-  width: 20%; /* 縮小並改為綠色 */
+  width: 20%;
   background-color: #4CAF50;
   color: white;
   border: none;
   padding: 10px;
   cursor: pointer;
   border-radius: 5px;
-  margin-left: 10px; /* 讓按鈕與輸入框之間有間隔 */
+  margin-left: 10px;
 }
 
 #send-button:hover {
@@ -113,6 +118,39 @@ header {
   text-decoration: underline;
 }
 
+/* Skills Badge Styles */
+#specialization {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.skill-badge {
+  background-color: #4CAF50;
+  color: white;
+  padding: 5px 15px;
+  margin: 5px;
+  border-radius: 20px;
+  font-size: 14px;
+  text-align: center;
+}
+
+#email {
+  text-align: center;
+  margin-top: 10px;
+}
+
+#email a {
+  color: #4CAF50;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+#email a:hover {
+  text-decoration: underline;
+}
+
 /* 手機上調整 */
 @media (max-width: 600px) {
   #user-input {
@@ -123,18 +161,10 @@ header {
   }
 
   #chat-container {
-    height: 400px; /* 提高對話框高度 */
+    height: 400px;
   }
 
   .input-container {
-    flex-direction: row; /* 在手機上讓按鈕在右邊顯示 */
-  }
-  
-  /* 顯示專精與 email 在手機上 */
-  #specialization, #email {
-    display: block;
-    margin-top: 10px;
-    color: #333;
-    font-weight: bold;
+    flex-direction: row;
   }
 }
