@@ -51,7 +51,7 @@ header {
 
 .input-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end; /* 設置為右對齊 */
   padding: 10px;
   background-color: #222;
 }
@@ -73,6 +73,7 @@ header {
   padding: 10px;
   cursor: pointer;
   border-radius: 5px;
+  margin-left: 10px; /* 讓按鈕與輸入框之間有間隔 */
 }
 
 #send-button:hover {
@@ -126,7 +127,7 @@ header {
   }
 
   .input-container {
-    flex-direction: column;
+    flex-direction: row; /* 在手機上讓按鈕在右邊顯示 */
   }
   
   /* 顯示專精與 email 在手機上 */
