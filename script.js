@@ -15,9 +15,9 @@ function handleUserInput() {
   const input = userInput.value.trim();
   if (input === "") return;
 
-  addMessage(`You：${input}`);
+  addMessage(`🧑 你：${input}`);
   userInput.value = "";
-  addMessage(`🤖AskLepix.AI: 搜尋「${input}」的相關學術資料中...`);
+  addMessage(`🤖 Jimmy AI: 搜尋「${input}」的相關學術資料中...`);
 
   translateToEnglish(input)
     .then(translated => {
@@ -72,7 +72,6 @@ function searchPubMed(englishQuery, originalQuery) {
           addMessage("📚 PubMed 搜尋結果：");
           ids.forEach(id => {
             const item = summary.result[id];
-            // 加入翻譯功能：顯示中英文標題
             translateToChinese(item.title).then(chineseTitle => {
               addMessage(`🔸 <a href="https://pubmed.ncbi.nlm.nih.gov/${id}/" target="_blank">${item.title}</a> - ${chineseTitle}`);
             });
@@ -88,10 +87,17 @@ function searchPubMed(englishQuery, originalQuery) {
 function showGoogleScholarResults(englishQuery, originalQuery) {
   const googleUrl = `https://scholar.google.com/scholar?q=${encodeURIComponent(englishQuery)}&hl=zh-TW&as_sdt=0,5`;
   addMessage(`🔗 點此瀏覽 Google 學術搜尋結果：<a href="${googleUrl}" target="_blank">${googleUrl}</a>`);
+  addMessage("📘 Google 學術搜尋模擬結果：");
 
-  // 顯示範例說明用的前三筆模擬結果
-  addMessage("📘 Google 學術搜尋模擬結果（實際點擊上方連結查看）：");
-  for (let i = 1; i <= 3; i++) {
-    addMessage(`📄 範例文獻 ${i}：<em>「${originalQuery}」相關主題的研究文章</em>`);
-  }
+  const fakeTitles = [
+    `Current treatment strategies and long-term outcomes in ${englishQuery}`,
+    `Immunological aspects and inflammatory markers in patients with ${englishQuery}`,
+    `A meta-analysis of biologics efficacy for ${englishQuery} therapy`
+  ];
+
+  fakeTitles.forEach(title => {
+    translateToChinese(title).then(chineseTitle => {
+      addMessage(`🔸 ${title} - ${chineseTitle}`);
+    });
+  });
 }
