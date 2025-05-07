@@ -33,6 +33,8 @@
             padding: 20px;
             overflow-y: auto;
             margin-bottom: 60px; /* 留出空間給回到頂部按鈕 */
+            background-color: #000;
+            border-radius: 8px;
         }
 
         .message {
@@ -55,15 +57,15 @@
 
         /* 輸入框樣式 */
         #user-input {
-            width: 80%;
+            width: 90%;
             padding: 10px;
             font-size: 16px;
             margin: 10px auto;
             display: block;
             border-radius: 5px;
             border: none;
-            background-color: #222;
-            color: white;
+            background-color: #fff;
+            color: black;
         }
 
         /* 發送按鈕 */
@@ -74,6 +76,8 @@
             border: none;
             cursor: pointer;
             border-radius: 5px;
+            width: 90%;
+            margin: 10px auto;
         }
 
         /* 回到頂部按鈕 */
@@ -139,6 +143,14 @@
 <button id="send-button">發送</button>
 
 <button id="back-to-top" title="回到頂部">⬆</button>
+
+<!-- 新增專精與 Email -->
+<footer>
+    <div style="text-align:center; color:#fff; padding:20px;">
+        <p><strong>專精領域：</strong>碳權、生物科技、永續經營</p>
+        <p><strong>聯繫我：</strong><a href="mailto:jimmy@example.com" style="color:#4eaaff;">jimmy@example.com</a></p>
+    </div>
+</footer>
 
 <script src="script.js"></script>
 </body>
