@@ -15,9 +15,9 @@ function handleUserInput() {
   const input = userInput.value.trim();
   if (input === "") return;
 
-  addMessage(`🧑 你：${input}`);
+  addMessage(`User：${input}`);
   userInput.value = "";
-  addMessage(`🤖 Jimmy AI: 搜尋「${input}」的相關學術資料中...`);
+  addMessage(`AskLepix.AI: 搜尋「${input}」的相關學術資料中...`);
 
   translateToEnglish(input)
     .then(translated => {
