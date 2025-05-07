@@ -1,5 +1,3 @@
-// script.js
-
 const chatContainer = document.getElementById("chat-container");
 const userInput = document.getElementById("user-input");
 const sendButton = document.getElementById("send-button");
@@ -21,12 +19,13 @@ function handleUserInput() {
 
   translateToEnglish(input)
     .then(translated => {
+      console.log("🔍 翻譯結果：", translated);
       searchPubMed(translated, input);
       showGoogleScholarResults(translated, input);
     })
     .catch(error => {
       addMessage("❌ 翻譯失敗，請重試。");
-      console.error(error);
+      console.error("翻譯錯誤：", error);
     });
 }
 
@@ -41,18 +40,23 @@ function addMessage(message) {
 function translateToEnglish(text) {
   const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-TW&tl=en&dt=t&q=${encodeURIComponent(text)}`;
   return fetch(url)
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) throw new Error("翻譯 API 錯誤");
+      return response.json();
+    })
     .then(data => data[0][0][0]);
 }
 
 function searchPubMed(englishQuery, originalQuery) {
   const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(englishQuery)}&retmode=json&retmax=3`;
 
+  console.log("🔗 PubMed API URL：", url);
+
   fetch(url)
     .then(response => response.json())
     .then(data => {
       const ids = data.esearchresult.idlist;
-      if (ids.length === 0) {
+      if (!ids || ids.length === 0) {
         addMessage("🔍 找不到相關的 PubMed 文獻。");
         return;
       }
@@ -79,9 +83,10 @@ function showGoogleScholarResults(englishQuery, originalQuery) {
   const googleUrl = `https://scholar.google.com/scholar?q=${encodeURIComponent(englishQuery)}&hl=zh-TW&as_sdt=0,5`;
   addMessage(`🔗 點此瀏覽 Google 學術搜尋結果：<a href="${googleUrl}" target="_blank">${googleUrl}</a>`);
 
-  // 顯示範例說明用的前三筆模擬結果
   addMessage("📘 Google 學術搜尋模擬結果（實際點擊上方連結查看）：");
   for (let i = 1; i <= 3; i++) {
     addMessage(`📄 範例文獻 ${i}：<em>「${originalQuery}」相關主題的研究文章</em>`);
   }
 }
+
+console.log("🚀 Jimmy AI script.js 已載入");
