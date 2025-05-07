@@ -1,39 +1,32 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Asklepix.Ai</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <div id="app">
-    <header>
-      <h1>Asklepix.Ai</h1>
-    </header>
-
-    <div id="chat-container"></div>
-
-    <div class="input-container">
-      <input type="text" id="user-input" placeholder="請輸入查詢...">
-      <button id="send-button">送出</button>
-      <button id="clear-button">清除聊天</button>
-    </div>
-
-    <button id="back-to-top">↑</button>
-
-    <div id="specialization">
+    <h1>Asklepix.Ai</h1>
+    <div id="skills">
       <span class="skill-badge">AI 推理</span>
       <span class="skill-badge">資料搜尋</span>
       <span class="skill-badge">科學研究</span>
       <span class="skill-badge">專業顧問</span>
     </div>
-
-    <div id="email">
-      <a href="mailto:jimmylee0719@gmail.com">聯絡我</a>
+    <div id="chat-container"></div>
+    <div id="input-container">
+      <textarea id="userInput" placeholder="輸入您的問題，Shift + Enter 可換行..."></textarea>
+      <button onclick="handleUserInput()">送出</button>
     </div>
+    <a id="email-link" href="mailto:jimmylee0719@gmail.com">📧 聯絡 Email</a>
+    <button id="backToTopButton" onclick="scrollToTop()">⬆️ 回到頂端</button>
   </div>
 
   <script src="script.js"></script>
 </body>
+
 </html>
