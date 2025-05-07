@@ -32,13 +32,18 @@
       color: #ccc;
     }
 
+    #business-card a {
+      color: #4eaaff;
+      text-decoration: none;
+    }
+
     #chat-container {
       padding: 20px;
       max-width: 700px;
       margin: 0 auto;
       height: 70vh;
       overflow-y: auto;
-      background-color: #3a3a3a;
+      background-color: #000000; /* 改為黑色背景 */
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
     }
@@ -64,8 +69,8 @@
       border: none;
       border-radius: 5px;
       margin-right: 10px;
-      background-color: #555;
-      color: #fff;
+      background-color: #ffffff; /* 白色輸入框 */
+      color: #000000;             /* 黑色字體 */
     }
 
     #send-button {
@@ -105,7 +110,7 @@
   <div id="business-card">
     <h1>Jimmy 的 AI 代理人</h1>
     <p>專精：碳權、生技、永續、行銷、自動化工具</p>
-    <p>Email: jimmy@example.com | GitHub: @jimmydev</p>
+    <p>Email: <a href="mailto:jimmy@example.com">jimmy@example.com</a> | GitHub: @jimmydev</p>
   </div>
 
   <!-- 對話區 -->
