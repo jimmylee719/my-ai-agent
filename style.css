@@ -85,6 +85,21 @@ header h1 {
   background-color: #45a049;
 }
 
+#clear-button {
+  width: 20%;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+#clear-button:hover {
+  background-color: #e53935;
+}
+
 #back-to-top {
   position: fixed;
   bottom: 20px;
